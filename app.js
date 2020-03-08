@@ -6,7 +6,8 @@ const path = require('path');
 
 const saucesRoutes = require('./routes/sauces')
 const userRoutes = require('./routes/user')
-
+/* http://mongodb.github.io/node-mongodb-native/2.2/api/MongoClient.html option de connection
+https://mongoosejs.com/docs/connections.html#multiple_connections */
 mongooseDonnee.connect('mongodb+srv://adminalheure:btz7h20qqVDN7YhB@so-pekocko-de3dz.gcp.mongodb.net/test?retryWrites=true&w=majority',
 {
     useNewUrlParser: true,
