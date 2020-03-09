@@ -10,6 +10,7 @@ exports.signup = (req, res, then) => {
             email: req.body.email,
             password: hash
         });
+        delete user._id;
         console.log( user);
         user.save()
         .then(() => {
