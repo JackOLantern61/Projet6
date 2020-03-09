@@ -4,24 +4,32 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 exports.signup = (req, res, then) => {
-    bcrypt.hash(req.body.password, 10)
-    .then(hash => {
-        const user = new User({
-            email: req.body.email,
-            password: hash
-        });
-        delete user._id;
-        console.log( user);
-        user.save()
-        .then(() => {
-            console.log( "apré save");
-            res.status(201).json({ message: 'Utilisateur créé !'})
-        })
-        .catch(error => res.status(500).json({ error }));
-
-        console.log( "apré save");
+    User.findOne({ email: req.body.email })
+    .then(user => {
+        if(!user) {
+            bcrypt.hash(req.body.password, 10)
+            .then(hash => {
+                var user = new User({
+                    email: req.body.email,
+                    password: hash
+                });
+                user.save()
+                .then(() => {
+                    console.log( user._id);
+                    res.status(201).json({ message: 'Utilisateur créé !'})
+                })
+                .catch(error => {
+                    res.status(500).json({ error });
+                });
+            })
+            .catch(error => res.status(500).json({ error }));
+        } else {
+            return res.status(401).json({ message: 'Email déja utilisé !'});
+        }
+        
     })
     .catch(error => res.status(500).json({ error }));
+    
 };
 
 exports.login = (req, res, then) => {
