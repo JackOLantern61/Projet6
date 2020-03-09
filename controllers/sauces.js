@@ -42,37 +42,66 @@ exports.modifieSauce = (req, res, then) => {
         .catch(error => res.status(400).json({ error }));
 };
 
+/* supprime la sauce dont l'id est en parametre */
 exports.supprimeSauce = (req, res, then) => {
     Sauces.findOne({ _id: req.params.id})
 		.then( sauce => {
-      const filename = sauce.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, () => {
-        Sauces.deleteOne({_id: req.params.id })
-          .then(() => res.status(200).json({ message: 'Sauce supprimée !'}))
-          .catch(error => res.status(400).json({ error }));
-      });
-    })
-    .catch(error => res.status(500).json({ error }));
+            const filename = sauce.imageUrl.split('/images/')[1];
+            fs.unlink(`images/${filename}`, () => {
+                Sauces.deleteOne({_id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Sauce supprimée !'}))
+                    .catch(error => res.status(400).json({ error }));
+            });
+        })
+        .catch(error => res.status(500).json({ error }));
 };
 
+/* gere les likes et dislike */
 exports.likeSauce = (req, res, then) => {
     Sauces.findOne({ _id: req.params.id})
 		.then( sauce => {
             switch (req.body.like) {
                 case -1:
                     /* n'aime pas*/
+                    sauce.dislikes++;
+                    sauce.usersdisliked.push(req.body.userId);
+                    if (sauce.usersliked.includes(req.body.userId)) {
+                        sauce.like--;
+                        let index = sauce.usersliked.indexOf(req.body.userId);
+                        sauce.usersliked.splice(index, 1);
+                    }
+                    
                     break;
                 case 0:
                     /* annule le vote */
+                    if (sauce.usersliked.includes(req.body.userId)) {
+                        sauce.like--;
+                        let index = sauce.usersliked.indexOf(req.body.userId);
+                        sauce.usersliked.splice(index, 1);
+                    } else if (sauce.usersdisliked.includes(req.body.userId)) {
+                        sauce.dislike--;
+                        let index = sauce.usersdisliked.indexOf(req.body.userId);
+                        sauce.usersdisliked.splice(index, 1);
+                    }
                     break;
                 case 1:
                     /* aime */
+                    sauce.likes++;
+                    sauce.usersliked.push(req.body.userId);
+                    if (sauce.usersdisliked.includes(req.body.userId)) {
+                        sauce.dislike--;
+                        let index = sauce.usersdisliked.indexOf(req.body.userId);
+                        sauce.usersdisliked.splice(index, 1);
+                    }
                     break;
                 default:
                     res.status(404).json({ message: "Error : unknow like type !" });
                     break;
-            } 
-            res.status(200).json(sauce)
+            }
+            /* mise a jour de la bdd */
+            Sauces.updateOne({_id: req.params.id }, { ...sauce, _id: req.params.id })
+                .then(() => res.status(200).json({ message: 'Like de la sauce modifié !'}))
+                .catch(error => res.status(400).json({ error }));
         })
 		.catch(error => res.status(404).json({ error }));
 }
