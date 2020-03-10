@@ -26,7 +26,7 @@ exports.creeSauce = (req, res, then) => {
         usersDisliked: []
     });
     sauce.save()
-        .then(() => res.status(201).json({message: 'Objet enregistré !'}))
+        .then(() => res.status(201).json({message: 'Sauce enregistré !'}))
         .catch(error => res.status(400).json({ error }));
 
 };
@@ -37,6 +37,18 @@ exports.modifieSauce = (req, res, then) => {
         ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
+    if (req.file) {
+        Sauces.findOne({ _id: req.params.id })
+		.then( sauce => {
+            const filename = sauce.imageUrl.split('/images/')[1];
+            fs.unlink(`images/${filename}`, (err) => {
+                if (err) {
+                    console.log("failed to delete local image:"+err);
+                }
+            });
+        })
+        .catch(error => res.status(500).json({ error }));
+    }
     Sauces.updateOne({_id: req.params.id }, { ...sauceObject, _id: req.params.id })
         .then(() => res.status(200).json({ message: 'Sauce modifié !'}))
         .catch(error => res.status(400).json({ error }));

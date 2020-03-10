@@ -2,22 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 const saucesCtrl = require('../controllers/sauces');
-/*const auth = require('../middleware/auth');*/
+const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
 
 /* recuperer une sauce */
-router.get('/:id', saucesCtrl.getUneSauce);
+router.get('/:id', auth, saucesCtrl.getUneSauce);
 /* recuperer toutes les sauces */
-router.get('/', saucesCtrl.getAllSauces);
+router.get('/', auth, saucesCtrl.getAllSauces);
 /* enregistre la sauce recu dans la BDD */
-router.post('/', multer, saucesCtrl.creeSauce);
+router.post('/', auth, multer, saucesCtrl.creeSauce);
 /* met a jour la sauce image et ou contenu */
-router.put('/:id', multer, saucesCtrl.modifieSauce);
+router.put('/:id', auth, multer, saucesCtrl.modifieSauce);
 /*supprime la sauce */
-router.delete('/:id', saucesCtrl.supprimeSauce);
+router.delete('/:id', auth, saucesCtrl.supprimeSauce);
 
 /* aime ou pas la sauce */
-router.post('/:id/like', saucesCtrl.likeSauce);
+router.post('/:id/like', auth, saucesCtrl.likeSauce);
 
 module.exports = router;
