@@ -22,8 +22,8 @@ exports.creeSauce = (req, res, then) => {
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         likes: 0,
         dislikes: 0,
-        usersliked: [],
-        usersdisliked: []
+        usersLiked: [],
+        usersDisliked: []
     });
     sauce.save()
         .then(() => res.status(201).json({message: 'Objet enregistré !'}))
@@ -64,34 +64,34 @@ exports.likeSauce = (req, res, then) => {
                 case -1:
                     /* n'aime pas*/
                     sauce.dislikes++;
-                    sauce.usersdisliked.push(req.body.userId);
-                    if (sauce.usersliked.includes(req.body.userId)) {
+                    sauce.usersDisliked.push(req.body.userId);
+                    if (sauce.usersLiked.includes(req.body.userId)) {
                         sauce.like--;
-                        let index = sauce.usersliked.indexOf(req.body.userId);
-                        sauce.usersliked.splice(index, 1);
+                        let index = sauce.usersLiked.indexOf(req.body.userId);
+                        sauce.usersLiked.splice(index, 1);
                     }
                     
                     break;
                 case 0:
                     /* annule le vote */
-                    if (sauce.usersliked.includes(req.body.userId)) {
+                    if (sauce.usersLiked.includes(req.body.userId)) {
                         sauce.like--;
-                        let index = sauce.usersliked.indexOf(req.body.userId);
-                        sauce.usersliked.splice(index, 1);
-                    } else if (sauce.usersdisliked.includes(req.body.userId)) {
+                        let index = sauce.usersLiked.indexOf(req.body.userId);
+                        sauce.usersLiked.splice(index, 1);
+                    } else if (sauce.usersDisliked.includes(req.body.userId)) {
                         sauce.dislike--;
-                        let index = sauce.usersdisliked.indexOf(req.body.userId);
-                        sauce.usersdisliked.splice(index, 1);
+                        let index = sauce.usersDisliked.indexOf(req.body.userId);
+                        sauce.usersDisliked.splice(index, 1);
                     }
                     break;
                 case 1:
                     /* aime */
                     sauce.likes++;
-                    sauce.usersliked.push(req.body.userId);
-                    if (sauce.usersdisliked.includes(req.body.userId)) {
+                    sauce.usersLiked.push(req.body.userId);
+                    if (sauce.usersDisliked.includes(req.body.userId)) {
                         sauce.dislike--;
-                        let index = sauce.usersdisliked.indexOf(req.body.userId);
-                        sauce.usersdisliked.splice(index, 1);
+                        let index = sauce.usersDisliked.indexOf(req.body.userId);
+                        sauce.usersDisliked.splice(index, 1);
                     }
                     break;
                 default:
