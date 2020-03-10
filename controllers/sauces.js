@@ -62,34 +62,33 @@ exports.likeSauce = (req, res, then) => {
 		.then( sauce => {
             switch (req.body.like) {
                 case -1:
-                    /* n'aime pas*/
+                    /* n'aime pas : on incremente les dislikes et on ajoute le userId au array usersDisliked*/
                     sauce.dislikes++;
                     sauce.usersDisliked.push(req.body.userId);
                     if (sauce.usersLiked.includes(req.body.userId)) {
-                        sauce.like--;
+                        sauce.likes--;
                         let index = sauce.usersLiked.indexOf(req.body.userId);
                         sauce.usersLiked.splice(index, 1);
                     }
-                    
                     break;
                 case 0:
-                    /* annule le vote */
+                    /* annule le vote : supprime le userId du array ou il se trouve et décrémente le likes ou dislikes*/
                     if (sauce.usersLiked.includes(req.body.userId)) {
-                        sauce.like--;
+                        sauce.likes--;
                         let index = sauce.usersLiked.indexOf(req.body.userId);
                         sauce.usersLiked.splice(index, 1);
                     } else if (sauce.usersDisliked.includes(req.body.userId)) {
-                        sauce.dislike--;
+                        sauce.dislikes--;
                         let index = sauce.usersDisliked.indexOf(req.body.userId);
                         sauce.usersDisliked.splice(index, 1);
                     }
                     break;
                 case 1:
-                    /* aime */
+                    /* aime : incrémente les likes et ajoute le userId au array usersLiked*/
                     sauce.likes++;
                     sauce.usersLiked.push(req.body.userId);
                     if (sauce.usersDisliked.includes(req.body.userId)) {
-                        sauce.dislike--;
+                        sauce.dislikes--;
                         let index = sauce.usersDisliked.indexOf(req.body.userId);
                         sauce.usersDisliked.splice(index, 1);
                     }
@@ -99,10 +98,21 @@ exports.likeSauce = (req, res, then) => {
                     break;
             }
             /* mise a jour de la bdd */
-            Sauces.updateOne({_id: req.params.id }, { ...sauce, _id: req.params.id })
-                .then(() => res.status(200).json({ message: 'Like de la sauce modifié !'}))
-                .catch(error => res.status(400).json({ error }));
+            Sauces.updateOne({_id: req.params.id }, { 
+                likes: sauce.likes, 
+                dislikes: sauce.dislikes, 
+                usersLiked: sauce.usersLiked,
+                usersDisliked: sauce.usersDisliked,
+                _id: req.params.id })
+                .then(() => {
+                    res.status(200).json({ message: 'Like de la sauce modifié !'});
+                    })
+                .catch(error => {
+                    res.status(400).json({ error });
+                });
         })
-		.catch(error => res.status(404).json({ error }));
+		.catch(error => {
+            res.status(404).json({ error });
+        });
 }
 
