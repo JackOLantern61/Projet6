@@ -1,6 +1,7 @@
 const http = require('http');
 const app = require('./app');
 
+/* définition d'un port si le port 3000 n'est pas libre */
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
@@ -35,6 +36,7 @@ const errorHandler = error => {
   }
 };
 
+/* creation du serveur et lancement de l'écoute sur le port définit */
 const server = http.createServer(app);
 
 server.on('error', errorHandler);

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
 
+/* inscrit l'utilisateur si son email n'est pas déjà utilisé */
 exports.signup = (req, res, then) => {
     User.findOne({ email: req.body.email })
     .then(user => {
@@ -23,7 +24,7 @@ exports.signup = (req, res, then) => {
             })
             .catch(error => res.status(500).json({ error }));
         } else {
-            return res.status(401).json({ message: 'Email déja utilisé !'});
+            return res.status(401).json({ message: 'Email déjà utilisé !'});
         }
         
     })
@@ -31,6 +32,7 @@ exports.signup = (req, res, then) => {
     
 };
 
+/* connecte un utilisateur grace a son email et son mot de passe */
 exports.login = (req, res, then) => {
     User.findOne({ email: req.body.email })
     .then(user => {

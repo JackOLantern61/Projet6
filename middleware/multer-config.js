@@ -6,6 +6,7 @@ const MINE_TYPES = {
     'image/png': 'png'
 }
 
+/* transforme le chemin physique du fichier en url valide */
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
         callback(null, 'images');

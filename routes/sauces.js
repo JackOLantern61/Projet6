@@ -6,11 +6,11 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
 
-/* recuperer une sauce */
+/* retourne une sauce */
 router.get('/:id', auth, saucesCtrl.getUneSauce);
-/* recuperer toutes les sauces */
+/* retourne toutes les sauces */
 router.get('/', auth, saucesCtrl.getAllSauces);
-/* enregistre la sauce recu dans la BDD */
+/* enregistre la sauce reçu dans la BDD */
 router.post('/', auth, multer, saucesCtrl.creeSauce);
 /* met a jour la sauce image et ou contenu */
 router.put('/:id', auth, multer, saucesCtrl.modifieSauce);

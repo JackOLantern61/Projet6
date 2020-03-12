@@ -1,19 +1,21 @@
 const Sauces = require('../models/Sauces');
 const fs = require('fs');
 
-
+/* retourne  un objet sauce correspondant a l'id passé en paramètre */
 exports.getUneSauce = (req, res, then) => {
     Sauces.findOne({ _id: req.params.id})
 		.then(sauce => res.status(200).json(sauce))
 		.catch(error => res.status(404).json({ error }));
 };
 
+/* retourne un tableau d'objet sauce */
 exports.getAllSauces = (req, res, then) => {
     Sauces.find()
     .then(sauces => res.status(200).json(sauces))
     .catch(error => res.status(400).json({ error }));
 };
 
+/* Enregistre dans la BDD la sauce que l'utilisateur a créer */
 exports.creeSauce = (req, res, then) => {
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id;
@@ -31,6 +33,7 @@ exports.creeSauce = (req, res, then) => {
 
 };
 
+/* modifie la sauce dont l'id est passé en paramètre */
 exports.modifieSauce = (req, res, then) => {
     const sauceObject = req.file ? 
     { 
@@ -38,6 +41,7 @@ exports.modifieSauce = (req, res, then) => {
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
     if (req.file) {
+        /* supprime l'ancienne image de la sauce si une nouvelle est fournis */
         Sauces.findOne({ _id: req.params.id })
 		.then( sauce => {
             const filename = sauce.imageUrl.split('/images/')[1];
@@ -54,7 +58,7 @@ exports.modifieSauce = (req, res, then) => {
         .catch(error => res.status(400).json({ error }));
 };
 
-/* supprime la sauce dont l'id est en parametre */
+/* supprime la sauce dont l'id est en paramètre */
 exports.supprimeSauce = (req, res, then) => {
     Sauces.findOne({ _id: req.params.id})
 		.then( sauce => {
@@ -68,13 +72,13 @@ exports.supprimeSauce = (req, res, then) => {
         .catch(error => res.status(500).json({ error }));
 };
 
-/* gere les likes et dislike */
+/* gère les likes et dislike */
 exports.likeSauce = (req, res, then) => {
     Sauces.findOne({ _id: req.params.id})
 		.then( sauce => {
             switch (req.body.like) {
                 case -1:
-                    /* n'aime pas : on incremente les dislikes et on ajoute le userId au array usersDisliked*/
+                    /* n'aime pas : on incrémente les dislikes et on ajoute le userId au array usersDisliked*/
                     sauce.dislikes++;
                     sauce.usersDisliked.push(req.body.userId);
                     if (sauce.usersLiked.includes(req.body.userId)) {

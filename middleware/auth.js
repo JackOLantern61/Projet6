@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+/* vérifie le token envoyé par le navigateur de l'utilisateur a chaque requête */
 module.exports = (req, res, next ) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
