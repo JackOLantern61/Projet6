@@ -2,7 +2,7 @@ const Sauces = require('../models/Sauces');
 const fs = require('fs');
 
 /* retourne  un objet sauce correspondant a l'id passé en paramètre */
-exports.getUneSauce = (req, res, then) => {
+exports.getOneSauce = (req, res, then) => {
     Sauces.findOne({ _id: req.params.id})
 		.then(sauce => res.status(200).json(sauce))
 		.catch(error => res.status(404).json({ error }));
@@ -16,7 +16,7 @@ exports.getAllSauces = (req, res, then) => {
 };
 
 /* Enregistre dans la BDD la sauce que l'utilisateur a créer */
-exports.creeSauce = (req, res, then) => {
+exports.createSauce = (req, res, then) => {
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id;
     const sauce = new Sauces({
@@ -34,7 +34,7 @@ exports.creeSauce = (req, res, then) => {
 };
 
 /* modifie la sauce dont l'id est passé en paramètre */
-exports.modifieSauce = (req, res, then) => {
+exports.modifySauce = (req, res, then) => {
     const sauceObject = req.file ? 
     { 
         ...JSON.parse(req.body.sauce),
@@ -59,7 +59,7 @@ exports.modifieSauce = (req, res, then) => {
 };
 
 /* supprime la sauce dont l'id est en paramètre */
-exports.supprimeSauce = (req, res, then) => {
+exports.deleteSauce = (req, res, then) => {
     Sauces.findOne({ _id: req.params.id})
 		.then( sauce => {
             const filename = sauce.imageUrl.split('/images/')[1];

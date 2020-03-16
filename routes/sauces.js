@@ -7,15 +7,15 @@ const multer = require('../middleware/multer-config');
 
 
 /* retourne une sauce */
-router.get('/:id', auth, saucesCtrl.getUneSauce);
+router.get('/:id', auth, saucesCtrl.getOneSauce);
 /* retourne toutes les sauces */
 router.get('/', auth, saucesCtrl.getAllSauces);
 /* enregistre la sauce reçu dans la BDD */
-router.post('/', auth, multer, saucesCtrl.creeSauce);
+router.post('/', auth, multer, saucesCtrl.createSauce);
 /* met a jour la sauce image et ou contenu */
-router.put('/:id', auth, multer, saucesCtrl.modifieSauce);
+router.put('/:id', auth, multer, saucesCtrl.modifySauce);
 /*supprime la sauce */
-router.delete('/:id', auth, saucesCtrl.supprimeSauce);
+router.delete('/:id', auth, saucesCtrl.deleteSauce);
 
 /* aime ou pas la sauce */
 router.post('/:id/like', auth, saucesCtrl.likeSauce);
