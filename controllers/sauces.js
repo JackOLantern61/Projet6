@@ -15,10 +15,45 @@ exports.getAllSauces = (req, res, then) => {
     .catch(error => res.status(400).json({ error }));
 };
 
+/* découpe la chaîne selon les espaces et remplace dans chaque morceau les caractères spéciaux par des underscore */
+const replaceCharacter = ( chaine ) => {
+    partChaine = chaine.split(' ');
+    let recompose = "";
+    for (let part in partChaine) {
+        if (/['\|\/\\\*\+&#"\{\(\[\]\}\)$£€%=\^`]/g.test(partChaine[part]) && !(/([a-zA-Z]{1}\'[a-z]{1})/gi.test(partChaine[part]))) {
+            partChaine[part] = partChaine[part].replace(/['\|\/\\\*\+&#"\{\(\[\]\}\)$£€%=\^`]/g, '_');
+        }
+        if (part == (partChaine.length - 1 )) {
+            recompose += partChaine[part]; 
+        } else {
+            recompose += partChaine[part] + ' ';
+        }
+    }
+    return recompose;
+}
+
+/* remplacement des caractères spéciaux présent dans les différent champs */
+const securitySauce = ( sauce ) => {
+    try{
+        sauce.name = replaceCharacter(sauce.name);
+        sauce.manufacturer = replaceCharacter(sauce.manufacturer);
+        sauce.description = replaceCharacter(sauce.description);
+        sauce.mainPepper = replaceCharacter(sauce.mainPepper);
+        return sauce;
+    } catch (error) {
+        res.status(401).json({ error });
+        return 0;
+    }
+}
+
 /* Enregistre dans la BDD la sauce que l'utilisateur a créer */
 exports.createSauce = (req, res, then) => {
-    const sauceObject = JSON.parse(req.body.sauce);
+    var sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id;
+
+    /* remplacement des caractères spéciaux présent dans les différent champs */
+    if(!securitySauce(sauceObject)) { return; };
+
     const sauce = new Sauces({
         ...sauceObject,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
@@ -40,6 +75,9 @@ exports.modifySauce = (req, res, then) => {
         ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
+    /* remplacement des caractères spéciaux présent dans les différent champs */
+    if(!securitySauce(sauceObject)) { return; };
+    
     if (req.file) {
         /* supprime l'ancienne image de la sauce si une nouvelle est fournis */
         Sauces.findOne({ _id: req.params.id })
