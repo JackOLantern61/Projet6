@@ -6,7 +6,7 @@ const path = require('path');
 const saucesRoutes = require('./routes/sauces')
 const userRoutes = require('./routes/user')
 
-/* connexion a la base de donnée */
+/* connexion a la base de donnée et affichage d'un message en cas de réussite ou d'échec*/
 mongoose.connect('mongodb+srv://adminalheure:btz7h20qqVDN7YhB@so-pekocko-de3dz.gcp.mongodb.net/test?retryWrites=true&w=majority',
 {
     useNewUrlParser: true,
