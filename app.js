@@ -2,18 +2,18 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config()
 
 const saucesRoutes = require('./routes/sauces')
 const userRoutes = require('./routes/user')
 
 /* connexion a la base de donnée et affichage d'un message en cas de réussite ou d'échec*/
-mongoose.connect('mongodb+srv://adminalheure:btz7h20qqVDN7YhB@so-pekocko-de3dz.gcp.mongodb.net/test?retryWrites=true&w=majority',
-{
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log('Connection à MongoDB réussie !'))
-.catch(() => console.log('Connection à MongoDB échouée !'));
+mongoose.connect('mongodb+srv://' + process.env.MONGODB_USER + ':' + process.env.MONGODB_PASSWORD + '@' + process.env.MONGODB_HOST + '/test?retryWrites=true&w=majority', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => console.log('Connection à MongoDB réussie !'))
+    .catch(() => console.log('Connection à MongoDB échouée !'));
 
 const app = express();
 

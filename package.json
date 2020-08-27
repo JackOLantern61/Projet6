@@ -1,28 +1,29 @@
 {
-  "name": "projet6",
-  "version": "1.0.0",
-  "description": "Projet 6 de la formation Développeur web",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Coolbiker61/Projet6.git"
-  },
-  "author": "Coolbiker61",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Coolbiker61/Projet6/issues"
-  },
-  "homepage": "https://github.com/Coolbiker61/Projet6#readme",
-  "dependencies": {
-    "bcrypt": "^4.0.1",
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.7",
-    "mongoose-unique-validator": "^2.0.3",
-    "multer": "^1.4.2"
-  }
+    "name": "projet6",
+    "version": "1.0.0",
+    "description": "Projet 6 de la formation Développeur web",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Coolbiker61/Projet6.git"
+    },
+    "author": "Coolbiker61",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Coolbiker61/Projet6/issues"
+    },
+    "homepage": "https://github.com/Coolbiker61/Projet6#readme",
+    "dependencies": {
+        "bcrypt": "^5.0.0",
+        "body-parser": "^1.19.0",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^5.10.1",
+        "mongoose-unique-validator": "^2.0.3",
+        "multer": "^1.4.2"
+    }
 }
